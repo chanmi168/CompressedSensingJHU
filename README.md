@@ -1,4 +1,7 @@
 # CompressedSensingJHU
+
+[![Build Status](https://travis-ci.org/chanmi168/CompressedSensingJHU.svg?branch=master)](https://travis-ci.org/chanmi168/CompressedSensingJHU)
+
 Best Final Project for Compressed Sensing at JHU Spring 2018
 
 We aim to use the techniques we learned in compressed sensing class to do sparse recovery on MRI images. 
