@@ -6,7 +6,7 @@ We aim to use the techniques we learned in compressed sensing class to do sparse
 1. Literature review (the goal is to find the best work done before) 3/10
   * find interesting projects
     - DT-MRI
-    - holography
+    - holography wow
     - video recovery
     - anything that requires resolution improvements
   * some spec:
