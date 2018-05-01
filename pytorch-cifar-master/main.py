@@ -117,18 +117,13 @@ def test(epoch):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(testloader):
+    progress_bar = tqdm(trainloader, desc='Testing')
+
+    for batch_idx, (inputs, targets) in enumerate(progress_bar):
+    # for batch_idx, (inputs, targets) in enumerate(testloader):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-
-        # test_loss += loss.item()
-        # _, predicted = outputs.max(1)
-        # total += targets.size(0)
-        # correct += predicted.eq(targets).sum().item()
-
-        # progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-        #     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
         test_loss += loss
         _, predicted = outputs.max(1)
