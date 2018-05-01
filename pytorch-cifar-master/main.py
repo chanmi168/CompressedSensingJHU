@@ -18,6 +18,7 @@ from models import *
 from utils import progress_bar
 from torch.autograd import Variable
 
+best_acc = 0
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
@@ -102,12 +103,11 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        # train_loss += loss.item()
         train_loss += loss
         _, predicted = outputs.max(1)
         total += targets.size(0)
-        # correct += predicted.eq(targets).sum().item()
         correct += predicted.eq(targets).sum().data.numpy()
+
     progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         % (train_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
 
@@ -122,13 +122,22 @@ def test(epoch):
         outputs = net(inputs)
         loss = criterion(outputs, targets)
 
-        test_loss += loss.item()
+        # test_loss += loss.item()
+        # _, predicted = outputs.max(1)
+        # total += targets.size(0)
+        # correct += predicted.eq(targets).sum().item()
+
+        # progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        #     % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
+
+        test_loss += loss
         _, predicted = outputs.max(1)
         total += targets.size(0)
-        correct += predicted.eq(targets).sum().item()
+        correct += predicted.eq(targets).sum().data.numpy()
+        
+    progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+        % (test_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
 
-        progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
     # Save checkpoint.
     acc = 100.*correct/total
