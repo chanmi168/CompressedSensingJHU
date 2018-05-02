@@ -123,7 +123,7 @@ def train(epoch):
             epoch, 
             np.squeeze(train_loss.cpu().data.numpy())/(batch_idx+1), 
             correct, total,
-            100.*correct/total)))
+            100.*correct/total))
 
 
 def test(epoch):
@@ -151,7 +151,7 @@ def test(epoch):
             epoch, 
             np.squeeze(trtest_lossain_loss.cpu().data.numpy())/(batch_idx+1), 
             correct, total,
-            100.*correct/total)))
+            100.*correct/total))
 
     # Save checkpoint.
     acc = 100.*correct/total
