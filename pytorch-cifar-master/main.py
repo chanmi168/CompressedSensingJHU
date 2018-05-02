@@ -23,6 +23,9 @@ best_acc = 0
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
+parser.add_argument('--no-cuda', action='store_true', default=False,
+                    help='disables CUDA training')
+                    
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
 
