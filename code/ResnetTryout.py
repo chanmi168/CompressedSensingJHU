@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 import os
 from dataParser import *
 from modelFunctions import *
+from resnet import *
 
 # Training settings
 parser = argparse.ArgumentParser(description='ResNet Tryout -- ')
@@ -58,53 +59,15 @@ parser.add_argument('--model', type=str, default='default', metavar='M',
                     P2Q11ExtraConvNet, P2Q12RemoveLayerNet, and P2Q13UltimateNet.""")
 parser.add_argument('--print_log', action='store_true', default=False,
                     help='prints the csv log when training is complete')
+parser.add_argument('--depthLayers', action='store_true', default=False,
+                    help='modify layers for depth completion')
 
-def prepareDataset(args):
-    dataset_dir = os.path.join(args.data_dir, args.dataset)
-    kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
+args = parser.parse_args()
 
-    # if args.dataset == 'mnist':
-    #     DatasetClass = datasets.MNIST
-    # if args.dataset == 'CIFAR10':
-    #     DatasetClass = datasets.CIFAR10
-
-    # train_dataset = DatasetClass(
-    #     dataset_dir, train=True, download=True,
-    #     transform=transforms.Compose([
-    #         transforms.ToTensor(),
-    #         transforms.Normalize((0.1307,), (0.3081,))
-    #     ]))
-    # train_loader = torch.utils.data.DataLoader(
-    #     train_dataset, batch_size=args.batch_size, shuffle=True, **kwargs)
-
-    # test_dataset = DatasetClass(
-    #         dataset_dir, train=False, 
-    #         transform=transforms.Compose([
-    #             transforms.ToTensor(),
-    #             transforms.Normalize((0.1307,), (0.3081,))
-    #     ]))
-    # test_loader = torch.utils.data.DataLoader(
-    #     test_dataset, batch_size=args.test_batch_size, shuffle=True, **kwargs)
-
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-    trainset = torchvision.datasets.CIFAR10(root=dataset_dir, train=True, download=True, transform=transform_train)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
-
-    testset = torchvision.datasets.CIFAR10(root=dataset_dir, train=False, download=True, transform=transform_test)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
-    
-    return trainloader, testloader
-    # return train_loader, test_loader
+if args.depthLayers:
+    print('ResNet18 modified for depth completion')
+else:
+    print('ResNet18')
 
 def saveResults(train_losses, train_accs, val_losses, val_acc, best_val_acc):
     # TODO implement me
@@ -118,7 +81,11 @@ def run_experiment(args, train_loader, test_loader):
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
 
-    model = models.resnet18(pretrained=False)
+    kwargs = {'num_classes': 10}
+    model = ResNet18(**kwargs)
+    if args.cuda:
+        model.cuda()
+    # model = models.resnet18(pretrained=False, **kwargs)
     epochs_to_run = args.epochs
     optimizer = optim.Adam(model.parameters())
     # Run the primary training loop, starting with validation accuracy of 0
@@ -141,13 +108,13 @@ def run_experiment(args, train_loader, test_loader):
         val_accs.append(val_acc)
         if val_acc >= best_val_acc:
             best_val_acc = val_acc
-            torch.save(model.state_dict(), '../data/.pt')
+            torch.save(model.state_dict(), '../../data/.pt')
 
     saveResults(train_losses, train_accs, val_losses, val_acc, best_val_acc)
 
 
 def resnetMain():
-    args = parser.parse_args()
+    global args
     args.cuda = not args.no_cuda and torch.cuda.is_available()
 
     # Prepare Dataset
@@ -155,12 +122,12 @@ def resnetMain():
     # train_dataloader = ImageDataset(train_dataset, batch_size=args.batch_size,
     #                                 shuffle=True)
 
+    print('==> Preparing data..')
     (train_loader, test_loader) = prepareDataset(args)
     
     # Start training, evaluate loss and acc
     run_experiment(args, train_loader, test_loader)
 
-    print('done loading')
 
     # TODO implement me
     # raise NotImplementedError
