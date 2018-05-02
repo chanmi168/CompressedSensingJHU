@@ -96,6 +96,8 @@ def train(epoch):
     for batch_idx, (inputs, targets) in enumerate(progress_bar):
     # for batch_idx, (inputs, targets) in enumerate(trainloader):
         # inputs, targets = inputs.to(device), targets.to(device)
+        if args.cuda:
+            inputs, targets = inputs.cuda(), targets.cuda()
         inputs, targets = Variable(inputs), Variable(targets)
         optimizer.zero_grad()
         outputs = net(inputs)
@@ -121,7 +123,9 @@ def test(epoch):
 
     for batch_idx, (inputs, targets) in enumerate(progress_bar):
     # for batch_idx, (inputs, targets) in enumerate(testloader):
-        inputs, targets = inputs.to(device), targets.to(device)
+        if args.cuda:
+            inputs, targets = inputs.cuda(), targets.cuda()
+        inputs, targets = Variable(inputs), Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
 
