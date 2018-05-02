@@ -118,7 +118,7 @@ def train(epoch):
         correct += predicted.eq(targets).cpu().sum().data.numpy()
 
     progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-        % (train_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
+        % (train_loss.cpu().data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
 
 def test(epoch):
     global best_acc
@@ -142,7 +142,7 @@ def test(epoch):
         correct += predicted.eq(targets).cpu().sum().data.numpy()
         
     progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-        % (test_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
+        % (test_loss.data.cpu().numpy()/(batch_idx+1), 100.*correct/total, correct, total))
 
 
     # Save checkpoint.
