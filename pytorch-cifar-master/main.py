@@ -17,6 +17,8 @@ from tqdm import tqdm
 from models import *
 from utils import progress_bar
 from torch.autograd import Variable
+import numpy as np
+
 
 best_acc = 0
 
@@ -119,7 +121,7 @@ def train(epoch):
 
     progress_bar.write('Epoch: {} - Training results - Average train_loss: {:.4f}, train_acc: {}/{} ({:.2f}%)'.format(
             epoch, 
-            (train_loss.cpu().data.numpy()/(batch_idx+1), 
+            np.squeeze(train_loss.cpu().data.numpy())/(batch_idx+1), 
             correct, total,
             100.*correct/total)))
 
@@ -147,7 +149,7 @@ def test(epoch):
         
     progress_bar.write('Epoch: {} - Validation results - Average val_loss: {:.4f}, val_acc: {}/{} ({:.2f}%)'.format(
             epoch, 
-            (test_loss.data.cpu().numpy()/(batch_idx+1), 
+            np.squeeze(trtest_lossain_loss.cpu().data.numpy())/(batch_idx+1), 
             correct, total,
             100.*correct/total)))
 
