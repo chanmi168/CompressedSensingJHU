@@ -25,7 +25,7 @@ parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--no-cuda', action='store_true', default=False,
                     help='disables CUDA training')
-                    
+
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
 
@@ -115,7 +115,7 @@ def train(epoch):
         train_loss += loss
         _, predicted = outputs.max(1)
         total += targets.size(0)
-        correct += predicted.eq(targets).sum().data.numpy()
+        correct += predicted.eq(targets).cpu().sum().data.numpy()
 
     progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         % (train_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
@@ -139,7 +139,7 @@ def test(epoch):
         test_loss += loss
         _, predicted = outputs.max(1)
         total += targets.size(0)
-        correct += predicted.eq(targets).sum().data.numpy()
+        correct += predicted.eq(targets).cpu().sum().data.numpy()
         
     progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         % (test_loss.data.numpy()/(batch_idx+1), 100.*correct/total, correct, total))
