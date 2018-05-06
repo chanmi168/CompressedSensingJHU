@@ -64,11 +64,6 @@ class Bottleneck(nn.Module):
         out = F.relu(out)
         return out
 
-class UpProj(nn.Module):
-    def __init__(self, in_planes, planes, stride=1):
-        # raise NotImplementedError
-    def forward(self, x):
-        # raise NotImplementedError
 
 
 
@@ -149,5 +144,3 @@ def test():
     net = ResNet18()
     y = net(Variable(torch.randn(1,3,32,32)))
     print(y.size())
-
-# test()
