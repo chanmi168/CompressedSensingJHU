@@ -58,6 +58,7 @@ class TestLayers(TestCase):
         loss.backward()
         optimizer.step()
 
+    # Major tests: must make sure model can do forward and backward passes
     def test_resnet18(self):
         path_to_file = os.getcwd()
         im_frame = Image.open(path_to_file + '/modules/sample.png').convert("RGB")
@@ -81,7 +82,7 @@ class TestLayers(TestCase):
         out_channel = 256
         test_input = (torch.rand(batch_size, input_channel, 8, 29) * 2).double()
         test_target = (torch.rand(batch_size, out_channel, 8, 29) * 2).double()
-        # self.check_net(EncodingLayer(), test_input, test_target)
+        self.check_net(EncodingLayer(), test_input, test_target)
 
 
     def test_decoding(self):
@@ -90,7 +91,33 @@ class TestLayers(TestCase):
         out_channel = 1
         test_input = (torch.rand(batch_size, input_channel, 8, 29) * 2).double()
         test_target = (torch.rand(batch_size, out_channel, 228, 912) * 2).double()
-        self.check_net(DecodingLayer(), test_input, test_target)
+        # self.check_net(DecodingLayer(), test_input, test_target)
+
+
+    def test_depthLoss(self):
+        # TODO implement me
+        pass
+
+
+    def test_depthnet(self):
+        # TODO implement me
+        pass
+
+    # Minor tests: make sure sub-layer/function works as expected
+    def test_vis_restnet(self):
+        # visualize resnet output
+        # TODO implement me
+        pass
+
+    def test_Unpool(self):
+        # output for input [1] should be [[1,0],[0,0]]
+        # TODO implement me
+        pass
+        
+    def test_UpProj(self):
+        # compute output using UpProj and numpy
+        # TODO implement me
+        pass       
 
 if __name__ == '__main__':
     # Automatically call every function

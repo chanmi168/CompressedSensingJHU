@@ -26,6 +26,7 @@ def conv3x3(in_planes, out_planes, stride=1):
 
 
 class BasicBlock(nn.Module):
+    # TODO minor, maybe we can write description?
     expansion = 1
 
     def __init__(self, inplanes, planes, stride=1, downsample=None):
@@ -58,7 +59,7 @@ class BasicBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    # def __init__(self, block, layers, num_classes=1000):
+    # TODO minor, maybe we can write description?
     def __init__(self, block, layers):
         # self.inplanes = 64
         super(ResNet, self).__init__()
@@ -80,7 +81,6 @@ class ResNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant(m.weight, 1)
                 nn.init.constant(m.bias, 0)
-
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -144,6 +144,8 @@ class EncodingLayer(nn.Module):
         return x
 
 class Unpool(nn.Module):
+    # TODO minor, maybe we can write description?
+
     # Unpool: 2*2 unpooling with zero padding 
     def __init__(self, num_channels, stride=2):
         super(Unpool, self).__init__()
@@ -161,6 +163,7 @@ class Unpool(nn.Module):
 
 
 class UpProj(nn.Module):
+    # TODO minor, maybe we can write description?    
     def __init__(self, input_ch):
         super(UpProj, self).__init__()
         self.input_ch = input_ch
@@ -248,6 +251,24 @@ class DecodingLayer(nn.Module):
         x = self.bilinear(x)
         return x
 
+class _Loss(nn.Module):
+    def __init__(self, size_average=True):
+        super(_Loss, self).__init__()
+        self.size_average = size_average
+
+class _WeightedLoss(_Loss):
+    def __init__(self, weight=None, size_average=True):
+        super(_WeightedLoss, self).__init__(size_average)
+        self.register_buffer('weight', weight)
+
+class depthLoss(_WeightedLoss):
+    # TODO implement and write class description (check P3BCELoss)
+    def __init__(self):
+        super(depthLoss, self).__init__()
+
+    def forward(self, input, target):
+        raise NotImplementedError
+
 class depthnet(nn.Module):
     r"""depthnet adpats a similar architecture described in [1]. It includes
     a ResNet18, a encoding layer, and a decoding layer. It expects an input 
@@ -278,11 +299,6 @@ class depthnet(nn.Module):
         self.resnet18 = ResNet(BasicBlock, [2, 2, 2, 2])
         self.encoding = EncodingLayer()
         self.decoding = DecodingLayer()
-        # ResNet(BasicBlock, [2,2,2,2], **kwargs)
-        # Encoding
-        # layers.append(depthEnc())
-        # Decoding
-        # layers.append(depthDec())
 
     def forward(self, input):
         output = self.resnet18(input)
