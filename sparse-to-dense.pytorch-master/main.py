@@ -142,26 +142,24 @@ def main():
     # traindir = os.path.join('data', args.data, 'train')
     # valdir = os.path.join('data', args.data, 'val')
 
-    if args.data == 'kitti'
-    	rgb_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/rgb/'
-    	sparse_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/sd/'
-    	continuous_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/cd/'
-    	ground_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/ground/'
-    	train_dataset = RgbdDataset(rgb_dir, sparse_depth_dir, continuous_depth_dir, ground_dir)
-	    train_loader = torch.utils.data.DataLoader(
-	        train_dataset, batch_size=args.batch_size, shuffle=True,
-	        num_workers=args.workers, pin_memory=True, sampler=None)
+    if args.data == 'kitti':
+    	pass
+    	# rgb_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/rgb/'
+    	# sparse_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/sd/'
+    	# continuous_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/cd/'
+    	# ground_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/ground/'
+    	# train_dataset = RgbdDataset(rgb_dir, sparse_depth_dir, continuous_depth_dir, ground_dir)
+	    # train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.workers, pin_memory=True, sampler=None))
 
-	    # set batch size to be 1 for validation
-	    rgb_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/rgb/'
-    	sparse_depth_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/sd/'
-    	continuous_depth_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/cd/'
-    	ground_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/ground/'
-	    val_dataset = RgbdDataset(rgb_dir_val, sparse_depth_dir_val, continuous_depth_dir_val, ground_dir_val)
-	    val_loader = torch.utils.data.DataLoader(val_dataset,
-	        batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
+	    # # set batch size to be 1 for validation
+	    # rgb_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/rgb/'
+    	# sparse_depth_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/sd/'
+    	# continuous_depth_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/cd/'
+    	# ground_dir_val = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/validate/ground/'
+	    # val_dataset = RgbdDataset(rgb_dir_val, sparse_depth_dir_val, continuous_depth_dir_val, ground_dir_val)
+	    # val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
 
-    elif args.data == 'nyudepthv2'
+    elif args.data == 'nyudepthv2':
     	train_dataset = NYUDataset(traindir, type='train',
 	        modality=args.modality, sparsifier=sparsifier)
 	    train_loader = torch.utils.data.DataLoader(
@@ -275,6 +273,12 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
     end = time.time()
     for i, (input, target) in enumerate(train_loader):
+    	# print dimension
+    	print('input size is: ', input.size())
+    	print('target size is: ', target.size())
+    	print('input min and max is: ', input.min(), input.max())
+    	print('target min and max is: ', target.min(), target.max())
+    	exit()
 
         input, target = input.cuda(), target.cuda()
         input_var = torch.autograd.Variable(input)
