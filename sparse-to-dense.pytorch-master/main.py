@@ -14,7 +14,7 @@ import torch.optim
 import torch.utils.data
 
 from nyu_dataloader import NYUDataset
-from rgbd_dataset import RgbdDataset
+# from rgbd_dataset import RgbdDataset
 from models import Decoder, ResNet
 from metrics import AverageMeter, Result
 from dense_to_sparse import UniformSampling, SimulatedStereo
@@ -142,8 +142,8 @@ def main():
     # traindir = os.path.join('data', args.data, 'train')
     # valdir = os.path.join('data', args.data, 'val')
 
-    if args.data == 'kitti':
-    	pass
+    # if args.data == 'kitti':
+    # 	pass
     	# rgb_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/rgb/'
     	# sparse_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/sd/'
     	# continuous_depth_dir = '/media/kuowei/c9cb78ce-3109-4880-adad-b628c4261d82/rgb/train/cd/'
@@ -159,18 +159,18 @@ def main():
 	    # val_dataset = RgbdDataset(rgb_dir_val, sparse_depth_dir_val, continuous_depth_dir_val, ground_dir_val)
 	    # val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
 
-    elif args.data == 'nyudepthv2':
-    	train_dataset = NYUDataset(traindir, type='train',
-	        modality=args.modality, sparsifier=sparsifier)
-	    train_loader = torch.utils.data.DataLoader(
-	        train_dataset, batch_size=args.batch_size, shuffle=True,
-	        num_workers=args.workers, pin_memory=True, sampler=None)
+    # elif args.data == 'nyudepthv2':
+    train_dataset = NYUDataset(traindir, type='train',
+        modality=args.modality, sparsifier=sparsifier)
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset, batch_size=args.batch_size, shuffle=True,
+        num_workers=args.workers, pin_memory=True, sampler=None)
 
-	    # set batch size to be 1 for validation
-	    val_dataset = NYUDataset(valdir, type='val',
-	        modality=args.modality, sparsifier=sparsifier)
-	    val_loader = torch.utils.data.DataLoader(val_dataset,
-	        batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
+    # set batch size to be 1 for validation
+    val_dataset = NYUDataset(valdir, type='val',
+        modality=args.modality, sparsifier=sparsifier)
+    val_loader = torch.utils.data.DataLoader(val_dataset,
+        batch_size=1, shuffle=False, num_workers=args.workers, pin_memory=True)
 
     print("=> data loaders created.")
 
@@ -274,11 +274,11 @@ def train(train_loader, model, criterion, optimizer, epoch):
     end = time.time()
     for i, (input, target) in enumerate(train_loader):
     	# print dimension
-    	print('input size is: ', input.size())
-    	print('target size is: ', target.size())
-    	print('input min and max is: ', input.min(), input.max())
-    	print('target min and max is: ', target.min(), target.max())
-    	exit()
+        print('input size is: ', input.size())
+        print('target size is: ', target.size())
+        print('input min and max is: ', input.min(), input.max())
+        print('target min and max is: ', target.min(), target.max())
+        exit()
 
         input, target = input.cuda(), target.cuda()
         input_var = torch.autograd.Variable(input)
