@@ -53,6 +53,7 @@ class TestLayers(TestCase):
         optimizer.zero_grad()
         # Forward prediction step
         output = model(data)
+        print(output.size())
         loss = F.mse_loss(output, target)
         # Backpropagation step
         loss.backward()
@@ -82,7 +83,7 @@ class TestLayers(TestCase):
         out_channel = 256
         test_input = (torch.rand(batch_size, input_channel, 8, 29) * 2).double()
         test_target = (torch.rand(batch_size, out_channel, 8, 29) * 2).double()
-        self.check_net(EncodingLayer(), test_input, test_target)
+        # self.check_net(EncodingLayer(), test_input, test_target)
 
 
     def test_decoding(self):
@@ -100,8 +101,21 @@ class TestLayers(TestCase):
 
 
     def test_depthnet(self):
-        # TODO implement me
-        pass
+        path_to_file = os.getcwd()
+        im_frame = Image.open(path_to_file + '/modules/sample.png').convert("RGB")
+        im_np = np.array(im_frame)
+        fig, ax = plt.subplots(nrows=1, ncols=1)  # create figure & 1 axis
+        ax.imshow(im_np)
+        fig.savefig(path_to_file + '/modules/testImg.png')   # save the figure for inspection
+        plt.close(fig)
+
+        im_np = np.transpose(im_np, (2, 0, 1))
+        self.assertEqual(im_np.shape, (3, 375, 1242))
+        batch_size = 16
+        out_channel = 512
+        test_input = torch.Tensor(im_np).expand((batch_size,) + im_np.shape)
+        test_target = (torch.rand(batch_size, out_channel, 228, 912) * 2).double()
+        self.check_net(depthnet(), test_input, test_target)
 
     # Minor tests: make sure sub-layer/function works as expected
     def test_vis_restnet(self):
