@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-
+from read_depth import depth_read
 import os, sys
 
 class RgbdDataset(Dataset):
@@ -24,8 +24,11 @@ class RgbdDataset(Dataset):
 
 	def __getitem__(self, idx):
 		rgb_data = cv2.imread(self.rgb_list[idx])
-		sparse_depth_data = cv2.imread(self.sparse_depth_list[idx], 0)
-		continuous_depth_data = cv2.imread(self.continuous_depth_list[idx], 0)
-		ground_data = cv2.imread(self.ground_list[idx], 0)
+		#sparse_depth_data = cv2.imread(self.sparse_depth_list[idx], 0)
+		#continuous_depth_data = cv2.imread(self.continuous_depth_list[idx], 0)
+		#ground_data = cv2.imread(self.ground_list[idx], 0)
+		sparse_depth_data = depth_read(self.sparse_depth_list[idx])
+		continuous_depth_data = depth_read(self.continuous_depth_list[idx])
+		ground_data = depth_read(self.ground_list[idx])
 		identity = self.identity[idx]
 		return (rgb_data, sparse_depth_data, continuous_depth_data, ground_data, identity)
